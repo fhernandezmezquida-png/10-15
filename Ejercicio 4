@@ -1,0 +1,37 @@
+import java.util.*;
+
+class BFSShortestPath {
+    static int V=6;
+    static List<Integer>[] adj=new ArrayList[V];
+    static{
+        for(int i=0;i<V;i++) adj[i]=new ArrayList<>();
+        adj[0].addAll(Arrays.asList(1,2));
+        adj[1].add(3);
+        adj[2].add(3);
+        adj[3].add(4);
+        adj[4].add(5);
+    }
+
+    static void bfs(int s,int d){
+        int[] prev=new int[V];
+        Arrays.fill(prev,-1);
+        Queue<Integer> q=new LinkedList<>();
+        q.add(s);
+        boolean[] vis=new boolean[V];
+        vis[s]=true;
+        while(!q.isEmpty()){
+            int u=q.poll();
+            if(u==d) break;
+            for(int v:adj[u])
+                if(!vis[v]){vis[v]=true;prev[v]=u;q.add(v);}
+        }
+        List<Integer> path=new ArrayList<>();
+        for(int at=d;at!=-1;at=prev[at]) path.add(at);
+        Collections.reverse(path);
+        for(int x:path) System.out.print(x+" ");
+    }
+
+    public static void main(String[] args){
+        bfs(0,5);
+    }
+}
