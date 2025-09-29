@@ -1,0 +1,42 @@
+import java.util.*;
+
+class Dijkstra {
+    static int V=5;
+    static int[][] graph={
+        {0,10,0,0,3},
+        {0,0,2,0,4},
+        {0,0,0,9,0},
+        {0,0,7,0,0},
+        {0,1,8,2,0}
+    };
+
+    static void dijkstra(int src){
+        int[] dist=new int[V];
+        int[] prev=new int[V];
+        boolean[] vis=new boolean[V];
+        Arrays.fill(dist,Integer.MAX_VALUE);
+        dist[src]=0;
+        for(int i=0;i<V;i++){
+            int u=-1;
+            for(int j=0;j<V;j++) if(!vis[j]&&(u==-1||dist[j]<dist[u])) u=j;
+            vis[u]=true;
+            for(int v=0;v<V;v++)
+                if(graph[u][v]>0&&dist[u]+graph[u][v]<dist[v]){
+                    dist[v]=dist[u]+graph[u][v];
+                    prev[v]=u;
+                }
+        }
+        for(int i=0;i<V;i++){
+            System.out.print("0->"+i+" Dist:"+dist[i]+" Path:");
+            List<Integer> path=new ArrayList<>();
+            for(int at=i;at!=0;at=prev[at]) path.add(at);
+            path.add(0);
+            Collections.reverse(path);
+            System.out.println(path);
+        }
+    }
+
+    public static void main(String[] args){
+        dijkstra(0);
+    }
+}
