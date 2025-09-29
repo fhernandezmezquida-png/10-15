@@ -1,0 +1,40 @@
+import java.util.*;
+
+class Kruskal {
+    static int V=6;
+    static int[][] graph={
+        {0,6,1,5,0,0},
+        {6,0,2,0,5,0},
+        {1,2,0,2,6,0},
+        {5,0,2,0,0,4},
+        {0,5,6,0,0,3},
+        {0,0,0,4,3,0}
+    };
+
+    static class Edge implements Comparable<Edge>{
+        int u,v,w;
+        Edge(int u,int v,int w){this.u=u;this.v=v;this.w=w;}
+        public int compareTo(Edge e){return this.w-e.w;}
+    }
+
+    static int find(int[] p,int x){return p[x]==x?x:(p[x]=find(p,p[x]));}
+
+    public static void main(String[] args){
+        List<Edge> edges=new ArrayList<>();
+        for(int i=0;i<V;i++)
+            for(int j=i+1;j<V;j++)
+                if(graph[i][j]!=0) edges.add(new Edge(i,j,graph[i][j]));
+        Collections.sort(edges);
+        int[] parent=new int[V];
+        for(int i=0;i<V;i++) parent[i]=i;
+        int cost=0,discard=0,cnt=0;
+        for(Edge e:edges){
+            int pu=find(parent,e.u),pv=find(parent,e.v);
+            if(pu!=pv){cost+=e.w;parent[pu]=pv;cnt++;}
+            else discard++;
+            if(cnt==V-1) break;
+        }
+        System.out.println("Costo: "+cost);
+        System.out.println("Aristas descartadas: "+discard);
+    }
+}
