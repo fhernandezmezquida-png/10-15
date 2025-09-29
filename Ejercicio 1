@@ -1,0 +1,65 @@
+import java.util.*;
+
+class PrimKruskalMST {
+    static int V = 6;
+    static int[][] graph = {
+        {0,6,1,5,0,0},
+        {6,0,2,0,5,0},
+        {1,2,0,2,6,0},
+        {5,0,2,0,0,4},
+        {0,5,6,0,0,3},
+        {0,0,0,4,3,0}
+    };
+
+    static int prim() {
+        boolean[] visited = new boolean[V];
+        int[] key = new int[V];
+        Arrays.fill(key, Integer.MAX_VALUE);
+        key[0] = 0;
+        int res = 0;
+        for (int i=0;i<V;i++) {
+            int u=-1;
+            for (int j=0;j<V;j++)
+                if(!visited[j]&&(u==-1||key[j]<key[u])) u=j;
+            visited[u]=true;
+            res+=key[u];
+            for(int v=0;v<V;v++)
+                if(graph[u][v]!=0&&!visited[v]&&graph[u][v]<key[v])
+                    key[v]=graph[u][v];
+        }
+        return res;
+    }
+
+    static class Edge implements Comparable<Edge> {
+        int u,v,w;
+        Edge(int u,int v,int w){this.u=u;this.v=v;this.w=w;}
+        public int compareTo(Edge e){return this.w-e.w;}
+    }
+
+    static int kruskal() {
+        List<Edge> edges=new ArrayList<>();
+        for(int i=0;i<V;i++)
+            for(int j=i+1;j<V;j++)
+                if(graph[i][j]!=0) edges.add(new Edge(i,j,graph[i][j]));
+        Collections.sort(edges);
+        int[] parent=new int[V];
+        for(int i=0;i<V;i++) parent[i]=i;
+        int res=0,cnt=0;
+        for(Edge e:edges){
+            int pu=find(parent,e.u),pv=find(parent,e.v);
+            if(pu!=pv){
+                res+=e.w;
+                parent[pu]=pv;
+                if(++cnt==V-1) break;
+            }
+        }
+        return res;
+    }
+
+    static int find(int[] p,int x){return p[x]==x?x:(p[x]=find(p,p[x]));}
+
+    public static void main(String[] args) {
+        System.out.println("Prim: "+prim());
+        System.out.println("Kruskal: "+kruskal());
+    }
+}
