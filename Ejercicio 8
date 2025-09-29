@@ -1,0 +1,49 @@
+import java.util.*;
+
+class RedComputadoras {
+    static int V=6;
+    static List<Integer>[] adj=new ArrayList[V];
+    static{
+        for(int i=0;i<V;i++) adj[i]=new ArrayList<>();
+    }
+
+    static void add(int u,int v){
+        adj[u].add(v);
+        adj[v].add(u);
+    }
+
+    static boolean bfsReach(int s,int d){
+        boolean[] vis=new boolean[V];
+        Queue<Integer> q=new LinkedList<>();
+        q.add(s); vis[s]=true;
+        while(!q.isEmpty()){
+            int u=q.poll();
+            if(u==d) return true;
+            for(int v:adj[u]) if(!vis[v]){vis[v]=true;q.add(v);}
+        }
+        return false;
+    }
+
+    static void shortestPath(int s,int d){
+        int[] prev=new int[V];
+        Arrays.fill(prev,-1);
+        boolean[] vis=new boolean[V];
+        Queue<Integer> q=new LinkedList<>();
+        q.add(s); vis[s]=true;
+        while(!q.isEmpty()){
+            int u=q.poll();
+            if(u==d) break;
+            for(int v:adj[u]) if(!vis[v]){vis[v]=true;prev[v]=u;q.add(v);}
+        }
+        List<Integer> path=new ArrayList<>();
+        for(int at=d;at!=-1;at=prev[at]) path.add(at);
+        Collections.reverse(path);
+        System.out.println(path);
+    }
+
+    public static void main(String[] args){
+        add(0,1);add(1,2);add(2,3);add(3,4);add(4,5);
+        System.out.println(bfsReach(0,5));
+        shortestPath(0,5);
+    }
+}
